@@ -235,3 +235,27 @@ lane :upload_dsym do
       dsym_path: "#{ENV['OUTPUT_DIRECTORY']}/#{ENV['DSYM_NAME']}"
     )
 end
+# MacOS skip 한다
+lane :tests_without_signing do
+  scan(
+    workspace: "AdguardSafariExtension-iOS.xcworkspace",  # 실제 사용하는 워크스페이스
+    scheme: "AdguardExtension",                           # iOS 전용 스킴
+    device: "iPhone 15 Pro",
+    clean: true,
+    code_coverage: true,
+    skip_testing: [
+      "SharedAdGuardSDK-mac",
+      "Builder",
+      "AdGuardSdkDependencies",
+      "AdGuardSdkDependencies-mac",
+      "AdGuardSDK-mac",
+      "AdGuardSDKTests"  # macOS 테스트도 제외 (필요시)
+    ],
+    only_testing: "AdguardExtensionTests",  # iOS 테스트만 강제 실행
+    build_for_testing: false,
+    test_without_building: false,
+    skip_build: false,
+    disable_concurrent_testing: false,
+    prelaunch_simulator: true
+  )
+end
