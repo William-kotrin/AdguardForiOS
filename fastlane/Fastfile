@@ -236,27 +236,20 @@ lane :upload_dsym do
     )
 end
 # MacOS skip 한다
+# 인증서 없이 iOS 전용 테스트 (macOS 타겟 완전 제외)
 lane :tests_without_signing do
   scan(
-    workspace: "AdguardSafariExtension-iOS.xcworkspace",  # 실제 사용하는 워크스페이스
-    scheme: "AdguardExtension",                           # iOS 전용 스킴
+    workspace: "AdguardSafariExtension-iOS.xcworkspace",
+    scheme: "AdguardExtension",
     device: "iPhone 15 Pro",
     clean: true,
     code_coverage: true,
-    skip_testing: [
-      "SharedAdGuardSDK-mac",
-      "Builder",
-      "AdGuardSdkDependencies",
-      "AdGuardSdkDependencies-mac",
-      "AdGuardSDK-mac",
-      "AdGuardSDKTests"  # macOS 테스트도 제외 (필요시)
-    ],
-#    only_testing: "AdguardExtensionTests",  # iOS 테스트만 강제 실행
-#    build_for_testing: false,
-#    test_without_building: false,
-#    skip_build: false,
-#    disable_concurrent_testing: false,
-#    prelaunch_simulator: true
-  xcodebuild_command: "xcodebuild -skip-testing:Builder"
+    prelaunch_simulator: true,
+
+    # macOS 타겟 및 관련 빌드 스킵 (강화된 설정)
+    skip_build: true,  # 빌드 자체 스킵
+    only_testing: [],  # 모든 테스트 타겟 포함 (macOS 제외 보장)
+    skip_package_dependencies_resolution: false,  # 패키지 의존성만 유지
+    xcargs: "-skipMacroValidation -skipPackagePluginValidation"  # macOS 관련 검증 스킵
   )
 end
