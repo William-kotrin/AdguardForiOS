@@ -257,5 +257,6 @@ lane :tests_without_signing do
 #    skip_build: false,
 #    disable_concurrent_testing: false,
 #    prelaunch_simulator: true
+  xcodebuild_command: "xcodebuild -skip-testing:Builder"
   )
 end
