@@ -251,7 +251,7 @@ lane :tests_without_signing do
       "AdGuardSDK-mac",
       "AdGuardSDKTests"  # macOS 테스트도 제외 (필요시)
     ],
-    only_testing: "AdguardExtensionTests",  # iOS 테스트만 강제 실행
+#    only_testing: "AdguardExtensionTests",  # iOS 테스트만 강제 실행
 #    build_for_testing: false,
 #    test_without_building: false,
     skip_build: false,
