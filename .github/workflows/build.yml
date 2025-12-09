@@ -33,9 +33,13 @@ jobs:
         bundle install --jobs 4 --retry 3
 
     # 5. (옵션) Fastlane 테스트 실행
-    - name: Run Fastlane tests
-      run: bundle exec fastlane tests
-      continue-on-error: true   # 테스트 실패해도 workflow는 성공으로 처리하고 싶을 때
-
+#    - name: Run Fastlane tests
+#      run: bundle exec fastlane tests
+#      continue-on-error: true   # 테스트 실패해도 workflow는 성공으로 처리하고 싶을 때
+   # 6.  (옵션) Fastlane test 
+   
+    - name: Run Fastlane tests 
+      run: bundle exec fastlane tests_without_signing
+    
     - name: Done
       run: echo "AdGuard iOS 빌드 환경 완성! NEFilterDataProvider 테스트 가능"
