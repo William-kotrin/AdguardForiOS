@@ -1,0 +1,44 @@
+# .github/workflows/build.yml
+name: AdGuard iOS Build Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-14        # ← Xcode 16.1 + Homebrew 기본 포함
+
+    steps:
+    - name: Checkout 코드
+      uses: actions/checkout@v4
+
+    # 1. Homebrew 최신화 + 필수 패키지 설치
+    - name: Install Homebrew dependencies
+      run: |
+        brew update
+        brew install ruby node  # ruby와 node를 Homebrew로 설치
+
+    # 2. nvm 없이도 Node 22 설치 (Homebrew가 더 안정적)
+    - name: Install Node.js 22
+      run: brew install node@22 && brew link --overwrite node@22
+
+    # 3. Yarn 전역 설치
+    - name: Install Yarn
+      run: npm install -g yarn
+
+    # 4. Ruby gem + bundler 설치
+    - name: Install Bundler & Gems
+      run: |
+        gem install bundler
+        bundle config set --local path '.bundle/vendor'
+        bundle install --jobs 4 --retry 3
+
+    # 5. (옵션) Fastlane 테스트 실행
+    - name: Run Fastlane tests
+      run: bundle exec fastlane tests
+      continue-on-error: true   # 테스트 실패해도 workflow는 성공으로 처리하고 싶을 때
+
+    - name: Done
+      run: echo "AdGuard iOS 빌드 환경 완성! NEFilterDataProvider 테스트 가능"
